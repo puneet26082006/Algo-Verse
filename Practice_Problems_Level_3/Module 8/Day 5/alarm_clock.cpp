@@ -72,12 +72,53 @@ int knighty[8] = { -2, -1, 1, 2, 2, 1, -1, -2};
 
 
 
-
+int mp[20000005] ;
 
 void solve() {
+    int n , m , k ;
+    cin >> n >> m >> k ;
+
+    int mx = -1 ;
+    for(int i = 0 ; i < n ; i++){
+        int x ;
+        cin>> x ;
+
+        mx = max(mx, x) ;
+        mp[x]++ ;
+    }
+
+    int count = 0 ;
+    int ans = 0 ;
+    for(int i = 1 ; i <= m ; i++) {
+        if(mp[i]){
+            count++ ;
+        }
+
+        if(count == k){
+            ans++ ;
+            mp[i] = 0 ;
+            count-- ;
+        }
+    }
 
 
+    for(int i = m + 1 ; i <= mx ; i++){
+        if(mp[i - m]){
+            count-- ;
+        }
 
+        if(mp[i]){
+            count++ ;
+        }
+
+        if(count == k){
+            ans++ ;
+            mp[i] = 0 ;
+            count-- ;
+        }
+    }
+
+    cout<< ans <<endl ;
 
 }
 
