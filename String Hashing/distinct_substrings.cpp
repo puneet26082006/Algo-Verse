@@ -72,6 +72,7 @@ int knighty[8] = { -2, -1, 1, 2, 2, 1, -1, -2};
 
 
 const ll max_len = 10'00'005 ;
+
 const ll m1 = 1'00'00'00'009 ;
 const ll m2 = 1'00'00'00'007 ;
 
@@ -83,14 +84,14 @@ ll p2[max_len];
 ll inv1[max_len];
 ll inv2[max_len];
 
-vector<ll>h1 , h2 ;
+vector<ll> h1, h2 ;
 
-void precompute() {
+void precompute(){
     p1[0] = 1 , p2[0] = 1 ;
     inv1[0] = 1 , inv2[0] = 1 ;
 
-    ll inv1_base = expo(base, m1 - 2 , m1);
-    ll inv2_base = expo(base, m2 - 2 , m2);
+    ll inv1_base = expo(base, m1 - 2, m1);
+    ll inv2_base = expo(base, m2 - 2, m2);
 
     for(ll i = 1 ; i < max_len ; i++){
         p1[i] = (p1[i - 1] * base) % m1 ;
@@ -98,17 +99,16 @@ void precompute() {
 
         inv1[i] = (inv1[i - 1] * inv1_base) % m1 ;
         inv2[i] = (inv2[i - 1] * inv2_base) % m2 ;
-        
     }
 }
 
-void build(string & s){
+void build(string &s){
     ll n = s.size() ;
     h1.assign(n, 0);
     h2.assign(n, 0);
 
     for(ll i = 0 ; i < n ; i++){
-        ll val = s[i] - 'a' + 1 ;
+        int val = s[i] - 'a' + 1 ;
         h1[i] = (val * p1[i]) % m1 ;
         h2[i] = (val * p2[i]) % m2 ;
     }
@@ -119,9 +119,9 @@ void build(string & s){
     }
 }
 
-ll get_hash(ll l, ll r){
-    ll val1 = h1[r];
-    ll val2 = h2[r];
+ll get_hash(int l, int r){
+    ll val1 = h1[r] ;
+    ll val2 = h2[r] ;
 
     if(l > 0){
         val1 = mod_sub(val1, h1[l - 1], m1);
@@ -131,8 +131,9 @@ ll get_hash(ll l, ll r){
     val1 = mod_mul(val1, inv1[l], m1);
     val2 = mod_mul(val2, inv2[l], m2);
 
-    return (val1 << 32) | val2 ;
+    return (val1 << 31) | val2 ;
 }
+
 
 
 void solve() {
@@ -141,11 +142,17 @@ void solve() {
 
     build(s);
 
-    // if(get_hash(0, 2) == get_hash(4, 6)){
-    //     cout<< "YES" <<endl ;
-    // } else {
-    //     cout<< "NO" <<endl ;
-    // }
+    ll n = s.size() ;
+
+    set<ll> st ;
+
+    for(ll i = 0 ; i < n ; i++){
+        for(ll j = i ; j < n ; j++){
+            st.insert(get_hash(i, j));
+        }
+    }
+
+    cout<< st.size() <<endl ;
 
 }
 
